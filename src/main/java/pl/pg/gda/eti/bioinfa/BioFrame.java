@@ -5,6 +5,18 @@
  */
 package pl.pg.gda.eti.bioinfa;
 
+import java.io.File;
+import javax.swing.JFileChooser;
+import org.biojava.bio.alignment.AlignmentAlgorithm;
+import org.biojava.bio.alignment.AlignmentPair;
+import org.biojava.bio.alignment.NeedlemanWunsch;
+import org.biojava.bio.alignment.SmithWaterman;
+import org.biojava.bio.alignment.SubstitutionMatrix;
+import org.biojava.bio.seq.DNATools;
+import org.biojava.bio.seq.Sequence;
+import org.biojava.bio.symbol.AlphabetManager;
+import org.biojava.bio.symbol.FiniteAlphabet;
+
 /**
  *
  * @author wojtek
@@ -27,6 +39,7 @@ public class BioFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jFileChooser1 = new javax.swing.JFileChooser();
         label1 = new java.awt.Label();
         jTextField1 = new javax.swing.JTextField();
         label2 = new java.awt.Label();
@@ -54,8 +67,14 @@ public class BioFrame extends javax.swing.JFrame {
         label3.setText("Macierz podobieństwa");
 
         jTextField3.setEditable(false);
+        jTextField3.setText("mat");
 
         jButton1.setText("Wybierz plik");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Pokaż dopasowanie globalne");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -138,53 +157,80 @@ public class BioFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+
+	try {
+	    // The alphabet of the sequences. For this example DNA is choosen.
+	    FiniteAlphabet alphabet = (FiniteAlphabet) AlphabetManager.alphabetForName("DNA");
+	    // Read the substitution matrix file. 
+	    // For this example the matrix NUC.4.4 is good.
+	    SubstitutionMatrix matrix = new SubstitutionMatrix(alphabet, new File(jTextField3.getText()));
+	    // Define the default costs for sequence manipulation for the global alignment.
+	    AlignmentAlgorithm aligner = new NeedlemanWunsch(
+		    (short) 0, // match
+		    (short) 3, // replace
+		    (short) 2, // insert
+		    (short) 2, // delete
+		    (short) 1, // gapExtend
+		    matrix // SubstitutionMatrix
+	    );
+
+	    Sequence query = DNATools.createDNASequence(jTextField1.getText(), "query");
+	    Sequence target = DNATools.createDNASequence(jTextField2.getText(), "target");
+	    // Perform an alignment and save the results.
+	    AlignmentPair needleAlignmentPair = aligner.pairwiseAlignment(
+		    query, // first sequence
+		    target // second one
+	    );
+
+	    jTextArea1.setText("Wynik:\n" + needleAlignmentPair.getQuery().seqString() + "\n" + needleAlignmentPair.getSubject().seqString());
+	} catch (Exception e) {
+	}
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+	try {
+	    // The alphabet of the sequences. For this example DNA is choosen.
+	    FiniteAlphabet alphabet = (FiniteAlphabet) AlphabetManager.alphabetForName("DNA");
+	    // Read the substitution matrix file. 
+	    // For this example the matrix NUC.4.4 is good.
+	    SubstitutionMatrix matrix = new SubstitutionMatrix(alphabet, new File(jTextField3.getText()));
+	    // Define the default costs for sequence manipulation for the global alignment.
+	    AlignmentAlgorithm aligner = new SmithWaterman(
+		    (short) -1, // match
+		    (short) 3, // replace 
+		    (short) 2, // insert
+		    (short) 2, // delete
+		    (short) 1, // gapExtend
+		    matrix // SubstitutionMatrix
+	    );
+
+	    Sequence query = DNATools.createDNASequence(jTextField1.getText(), "query");
+	    Sequence target = DNATools.createDNASequence(jTextField2.getText(), "target");
+	    // Perform an alignment and save the results.
+	    AlignmentPair needleAlignmentPair = aligner.pairwiseAlignment(
+		    query, // first sequence
+		    target // second one
+	    );
+
+	    jTextArea1.setText("Wynik:\n" + needleAlignmentPair.getQuery().seqString() + "\n" + needleAlignmentPair.getSubject().seqString());
+	} catch (Exception e) {
+	}
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-	/* Set the Nimbus look and feel */
-	//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-	/* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-	 */
-	try {
-	    for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-		if ("Nimbus".equals(info.getName())) {
-		    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-		    break;
-		}
-	    }
-	} catch (ClassNotFoundException ex) {
-	    java.util.logging.Logger.getLogger(BioFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-	} catch (InstantiationException ex) {
-	    java.util.logging.Logger.getLogger(BioFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-	} catch (IllegalAccessException ex) {
-	    java.util.logging.Logger.getLogger(BioFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-	} catch (javax.swing.UnsupportedLookAndFeelException ex) {
-	    java.util.logging.Logger.getLogger(BioFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-	}
-	//</editor-fold>
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+	JFileChooser chooser = new JFileChooser();
+	chooser.showOpenDialog(this);
 
-	/* Create and display the form */
-	java.awt.EventQueue.invokeLater(new Runnable() {
-	    public void run() {
-		new BioFrame().setVisible(true);
-	    }
-	});
-    }
+	jTextField3.setText(chooser.getSelectedFile().getAbsolutePath());
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JFileChooser jFileChooser1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
