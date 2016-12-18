@@ -8,6 +8,8 @@ package pl.pg.gda.eti.bioinfa;
 import java.awt.BorderLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import org.biojava.bio.symbol.AlphabetManager;
+import org.biojava.bio.symbol.FiniteAlphabet;
 
 /**
  *
@@ -27,6 +29,10 @@ public class MainClass {
 	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	frame.setLocationRelativeTo(null);
 	frame.setVisible(true);
+	
+	FiniteAlphabet alphabet = (FiniteAlphabet) AlphabetManager.alphabetForName("DNA");
+	System.out.println(alphabet);
+	
 	
     }
     

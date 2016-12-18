@@ -12,18 +12,32 @@
     </properties>
     
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/org.biojava/biojava -->
+        <!-- https://mvnrepository.com/artifact/org.biojava/core -->
         <dependency>
             <groupId>org.biojava</groupId>
-            <artifactId>biojava-core</artifactId>
-            <version>4.2.5</version>
+            <artifactId>core</artifactId>
+            <version>1.9.2</version>
         </dependency>
-        
-        <!-- https://mvnrepository.com/artifact/org.biojava/biojava-alignment -->
+
+        <!-- https://mvnrepository.com/artifact/org.biojava/sequencing -->
         <dependency>
             <groupId>org.biojava</groupId>
-            <artifactId>biojava-alignment</artifactId>
-            <version>4.2.5</version>
+            <artifactId>sequencing</artifactId>
+            <version>1.9.2</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.biojava/alignment -->
+        <dependency>
+            <groupId>org.biojava</groupId>
+            <artifactId>alignment</artifactId>
+            <version>1.9.2</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.biojava/bytecode -->
+        <dependency>
+            <groupId>org.biojava</groupId>
+            <artifactId>bytecode</artifactId>
+            <version>1.9.2</version>
         </dependency>
 
     </dependencies>
