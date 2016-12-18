@@ -10,6 +10,7 @@ import java.io.File;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import org.biojava.bio.alignment.AlignmentAlgorithm;
+import org.biojava.bio.alignment.AlignmentPair;
 import org.biojava.bio.alignment.NeedlemanWunsch;
 import org.biojava.bio.alignment.SmithWaterman;
 import org.biojava.bio.alignment.SubstitutionMatrix;
@@ -43,12 +44,13 @@ public class MainClass {
 	    Sequence query = DNATools.createDNASequence("ATAAGC", "query");
 	    Sequence target = DNATools.createDNASequence("AAAAACG", "target");
 	    // Perform an alignment and save the results.
-	    aligner.pairwiseAlignment(
+	    AlignmentPair needleAlignmentPair = aligner.pairwiseAlignment(
 		    query, // first sequence
 		    target // second one
 	    );
 	    // Print the alignment to the screen
-	    System.out.println("Global alignment with Needleman-Wunsch:\n" + aligner.toString());
+	    
+	    System.out.println("Global alignment with Needleman-Wunsch:\n" + needleAlignmentPair.formatOutput());
 
 	    // Perform a local alginment from the sequences with Smith-Waterman. 
 	    // Firstly, define the expenses (penalties) for every single operation.
@@ -61,8 +63,8 @@ public class MainClass {
 		    matrix // SubstitutionMatrix
 	    );
 	    // Perform the local alignment.
-	    aligner.pairwiseAlignment(query, target);
-	    System.out.println("\nlocal alignment with SmithWaterman:\n" + aligner.toString());
+	    AlignmentPair smithAlignmentPair = aligner.pairwiseAlignment(query, target);
+	    System.out.println("\nlocal alignment with SmithWaterman:\n" + smithAlignmentPair.formatOutput());
 	} catch (Exception exc) {
 	    exc.printStackTrace();
 	}
