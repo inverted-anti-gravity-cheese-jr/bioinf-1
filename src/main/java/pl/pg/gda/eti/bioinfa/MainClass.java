@@ -31,7 +31,7 @@ public class MainClass {
 	    FiniteAlphabet alphabet = (FiniteAlphabet) AlphabetManager.alphabetForName("DNA");
 	    // Read the substitution matrix file. 
 	    // For this example the matrix NUC.4.4 is good.
-	    SubstitutionMatrix matrix = new SubstitutionMatrix(alphabet, new File("/home/wojtek/NUC.4.4"));
+	    SubstitutionMatrix matrix = new SubstitutionMatrix(alphabet, new File("mat"));
 	    // Define the default costs for sequence manipulation for the global alignment.
 	    AlignmentAlgorithm aligner = new NeedlemanWunsch(
 		    (short) 0, // match
