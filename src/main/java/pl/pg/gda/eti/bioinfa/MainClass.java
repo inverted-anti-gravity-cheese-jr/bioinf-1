@@ -41,6 +41,7 @@ public class MainClass {
 		    (short) 1, // gapExtend
 		    matrix // SubstitutionMatrix
 	    );
+	    
 	    Sequence query = DNATools.createDNASequence("ATAAGC", "query");
 	    Sequence target = DNATools.createDNASequence("AAAAACG", "target");
 	    // Perform an alignment and save the results.
