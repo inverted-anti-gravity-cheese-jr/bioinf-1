@@ -18,5 +18,13 @@
             <artifactId>biojava-core</artifactId>
             <version>4.2.5</version>
         </dependency>
+        
+        <!-- https://mvnrepository.com/artifact/org.biojava/biojava-alignment -->
+        <dependency>
+            <groupId>org.biojava</groupId>
+            <artifactId>biojava-alignment</artifactId>
+            <version>4.2.5</version>
+        </dependency>
+
     </dependencies>
 </project>
