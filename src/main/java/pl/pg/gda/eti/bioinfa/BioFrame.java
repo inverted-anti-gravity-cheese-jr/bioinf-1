@@ -6,6 +6,8 @@
 package pl.pg.gda.eti.bioinfa;
 
 import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import org.biojava.bio.alignment.AlignmentAlgorithm;
 import org.biojava.bio.alignment.AlignmentPair;
@@ -13,9 +15,12 @@ import org.biojava.bio.alignment.NeedlemanWunsch;
 import org.biojava.bio.alignment.SmithWaterman;
 import org.biojava.bio.alignment.SubstitutionMatrix;
 import org.biojava.bio.seq.DNATools;
+import org.biojava.bio.seq.RNATools;
 import org.biojava.bio.seq.Sequence;
 import org.biojava.bio.symbol.AlphabetManager;
 import org.biojava.bio.symbol.FiniteAlphabet;
+import org.biojava.bio.symbol.IllegalSymbolException;
+import org.biojava.bio.symbol.SymbolList;
 
 /**
  *
@@ -40,205 +45,224 @@ public class BioFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         jFileChooser1 = new javax.swing.JFileChooser();
-        label1 = new java.awt.Label();
-        jTextField1 = new javax.swing.JTextField();
-        label2 = new java.awt.Label();
-        jTextField2 = new javax.swing.JTextField();
-        label3 = new java.awt.Label();
-        jTextField3 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        label4 = new java.awt.Label();
+        firstSequenceTextLabel = new java.awt.Label();
+        firstSequenceTextField = new javax.swing.JTextField();
+        secondSequenceTextLabel = new java.awt.Label();
+        secondSequenceTextField = new javax.swing.JTextField();
+        matrixTextLabel = new java.awt.Label();
+        matrixTextField = new javax.swing.JTextField();
+        matrixFileChooser = new javax.swing.JButton();
+        globalAlignmentButton = new javax.swing.JButton();
+        localAlignmentButton = new javax.swing.JButton();
+        editDistanceButton = new javax.swing.JButton();
+        resultTextLabel = new java.awt.Label();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        resultTextArea = new javax.swing.JTextArea();
+        rnaCheckbox = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        label1.setText("Sekwencja pierwsza");
+        firstSequenceTextLabel.setText("Sekwencja pierwsza");
 
-        jTextField1.setText("ATAAGC");
-
-        label2.setText("Sekwencja druga");
-
-        jTextField2.setText("AAAAACG");
-
-        label3.setText("Macierz podobieństwa");
-
-        jTextField3.setEditable(false);
-        jTextField3.setText("mat");
-
-        jButton1.setText("Wybierz plik");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        firstSequenceTextField.setText("ATAAGC");
+        firstSequenceTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                firstSequenceTextFieldActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Pokaż dopasowanie globalne");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        secondSequenceTextLabel.setText("Sekwencja druga");
+
+        secondSequenceTextField.setText("AAAAACG");
+
+        matrixTextLabel.setText("Macierz podobieństwa");
+
+        matrixTextField.setEditable(false);
+        matrixTextField.setText("nucl");
+
+        matrixFileChooser.setText("Wybierz plik");
+        matrixFileChooser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                matrixFileChooserActionPerformed(evt);
             }
         });
 
-        jButton3.setText("Pokaż dopasowanie lokalne");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        globalAlignmentButton.setText("Pokaż dopasowanie globalne");
+        globalAlignmentButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                globalAlignmentButtonActionPerformed(evt);
             }
         });
 
-        jButton4.setText("Pokaż odległość edycyjną");
+        localAlignmentButton.setText("Pokaż dopasowanie lokalne");
+        localAlignmentButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                localAlignmentButtonActionPerformed(evt);
+            }
+        });
 
-        label4.setText("Wynik");
+        editDistanceButton.setText("Pokaż odległość edycyjną");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        resultTextLabel.setText("Wynik");
+
+        resultTextArea.setColumns(20);
+        resultTextArea.setRows(5);
+        jScrollPane1.setViewportView(resultTextArea);
+
+        rnaCheckbox.setText("Czy jest sekwencją RNA?");
+        rnaCheckbox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rnaCheckboxActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1)
-                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 473, Short.MAX_VALUE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addComponent(jTextField3)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(globalAlignmentButton, javax.swing.GroupLayout.DEFAULT_SIZE, 473, Short.MAX_VALUE)
+                    .addComponent(firstSequenceTextField)
+                    .addComponent(secondSequenceTextField)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(matrixTextField)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1))
-                    .addComponent(jButton3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addComponent(matrixFileChooser))
+                    .addComponent(localAlignmentButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(editDistanceButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(label2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(label3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(label4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                            .addComponent(firstSequenceTextLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(secondSequenceTextLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(matrixTextLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(resultTextLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(rnaCheckbox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(15, 15, 15)
-                .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(firstSequenceTextLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(firstSequenceTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(label2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(secondSequenceTextLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(secondSequenceTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(label3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(matrixTextLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(matrixTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(matrixFileChooser))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2)
+                .addComponent(globalAlignmentButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton3)
+                .addComponent(localAlignmentButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton4)
+                .addComponent(editDistanceButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(label4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(rnaCheckbox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE))
+                .addComponent(resultTextLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void globalAlignmentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_globalAlignmentButtonActionPerformed
 
 	try {
-	    // The alphabet of the sequences. For this example DNA is choosen.
-	    FiniteAlphabet alphabet = (FiniteAlphabet) AlphabetManager.alphabetForName("DNA");
-	    // Read the substitution matrix file. 
-	    // For this example the matrix NUC.4.4 is good.
-	    SubstitutionMatrix matrix = new SubstitutionMatrix(alphabet, new File(jTextField3.getText()));
-	    // Define the default costs for sequence manipulation for the global alignment.
-	    AlignmentAlgorithm aligner = new NeedlemanWunsch(
-		    (short) 0, // match
-		    (short) 3, // replace
-		    (short) 2, // insert
-		    (short) 2, // delete
-		    (short) 1, // gapExtend
-		    matrix // SubstitutionMatrix
-	    );
 
-	    Sequence query = DNATools.createDNASequence(jTextField1.getText(), "query");
-	    Sequence target = DNATools.createDNASequence(jTextField2.getText(), "target");
-	    // Perform an alignment and save the results.
-	    AlignmentPair needleAlignmentPair = aligner.pairwiseAlignment(
-		    query, // first sequence
-		    target // second one
-	    );
-
-	    jTextArea1.setText("Wynik:\n" + needleAlignmentPair.getQuery().seqString() + "\n" + needleAlignmentPair.getSubject().seqString());
+	    String sequence1 = firstSequenceTextField.getText();
+	    String sequence2 = secondSequenceTextField.getText();
+	    String similarityMatrixFile = matrixTextField.getText();
+	    AlignmentPair globalAlignment;
+	    if (rnaCheckbox.isSelected()) {
+		globalAlignment = BioAlgorithms.getGlobalAlignmentForRNA(sequence1, sequence2, similarityMatrixFile);
+	    } else {
+		globalAlignment = BioAlgorithms.getGlobalAlignment(sequence1, sequence2, similarityMatrixFile);
+	    }
+	    resultTextArea.setText("Wynik:\n" + globalAlignment.getQuery().seqString() + "\n" + globalAlignment.getSubject().seqString());
 	} catch (Exception e) {
 	}
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_globalAlignmentButtonActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void localAlignmentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_localAlignmentButtonActionPerformed
 	try {
-	    // The alphabet of the sequences. For this example DNA is choosen.
-	    FiniteAlphabet alphabet = (FiniteAlphabet) AlphabetManager.alphabetForName("DNA");
-	    // Read the substitution matrix file. 
-	    // For this example the matrix NUC.4.4 is good.
-	    SubstitutionMatrix matrix = new SubstitutionMatrix(alphabet, new File(jTextField3.getText()));
-	    // Define the default costs for sequence manipulation for the global alignment.
-	    AlignmentAlgorithm aligner = new SmithWaterman(
-		    (short) -1, // match
-		    (short) 3, // replace 
-		    (short) 2, // insert
-		    (short) 2, // delete
-		    (short) 1, // gapExtend
-		    matrix // SubstitutionMatrix
-	    );
-
-	    Sequence query = DNATools.createDNASequence(jTextField1.getText(), "query");
-	    Sequence target = DNATools.createDNASequence(jTextField2.getText(), "target");
-	    // Perform an alignment and save the results.
-	    AlignmentPair needleAlignmentPair = aligner.pairwiseAlignment(
-		    query, // first sequence
-		    target // second one
-	    );
-
-	    jTextArea1.setText("Wynik:\n" + needleAlignmentPair.getQuery().seqString() + "\n" + needleAlignmentPair.getSubject().seqString());
+	    String sequence1 = firstSequenceTextField.getText();
+	    String sequence2 = secondSequenceTextField.getText();
+	    String similarityMatrixFile = matrixTextField.getText();
+	    AlignmentPair localAlignment;
+	    if (rnaCheckbox.isSelected()) {
+		localAlignment = BioAlgorithms.getLocalAlignmentForRNA(sequence1, sequence2, similarityMatrixFile);
+	    }
+	    else {
+		localAlignment = BioAlgorithms.getLocalAlignment(sequence1, sequence2, similarityMatrixFile);
+	    }
+	    resultTextArea.setText("Wynik:\n" + localAlignment.getQuery().seqString() + "\n" + localAlignment.getSubject().seqString());
 	} catch (Exception e) {
 	}
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_localAlignmentButtonActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-	JFileChooser chooser = new JFileChooser();
-	chooser.showOpenDialog(this);
+    private void matrixFileChooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_matrixFileChooserActionPerformed
+	try {
+	    JFileChooser chooser = new JFileChooser();
+	    chooser.showOpenDialog(this);
+	    matrixTextField.setText(chooser.getSelectedFile().getAbsolutePath());
+	}
+	catch (Exception e) {}
+    }//GEN-LAST:event_matrixFileChooserActionPerformed
 
-	jTextField3.setText(chooser.getSelectedFile().getAbsolutePath());
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void firstSequenceTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_firstSequenceTextFieldActionPerformed
+	// TODO add your handling code here:
+    }//GEN-LAST:event_firstSequenceTextFieldActionPerformed
+
+    private String lastDnaSeq1;
+    private String lastDnaSeq2;
+
+    private void rnaCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rnaCheckboxActionPerformed
+	if (rnaCheckbox.isSelected()) {
+	    try {
+		lastDnaSeq1 = firstSequenceTextField.getText();
+		lastDnaSeq2 = secondSequenceTextField.getText();
+		SymbolList rna = DNATools.toRNA(DNATools.createDNA(firstSequenceTextField.getText()));
+		firstSequenceTextField.setText(rna.seqString().toUpperCase());
+		rna = DNATools.toRNA(DNATools.createDNA(secondSequenceTextField.getText()));
+		secondSequenceTextField.setText(rna.seqString().toUpperCase());
+	    } catch (Exception ex) {
+		ex.printStackTrace();
+	    }
+	} else {
+	    firstSequenceTextField.setText(lastDnaSeq1);
+	    secondSequenceTextField.setText(lastDnaSeq2);
+	}
+    }//GEN-LAST:event_rnaCheckboxActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JButton editDistanceButton;
+    private javax.swing.JTextField firstSequenceTextField;
+    private java.awt.Label firstSequenceTextLabel;
+    private javax.swing.JButton globalAlignmentButton;
     private javax.swing.JFileChooser jFileChooser1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private java.awt.Label label1;
-    private java.awt.Label label2;
-    private java.awt.Label label3;
-    private java.awt.Label label4;
+    private javax.swing.JButton localAlignmentButton;
+    private javax.swing.JButton matrixFileChooser;
+    private javax.swing.JTextField matrixTextField;
+    private java.awt.Label matrixTextLabel;
+    private javax.swing.JTextArea resultTextArea;
+    private java.awt.Label resultTextLabel;
+    private javax.swing.JCheckBox rnaCheckbox;
+    private javax.swing.JTextField secondSequenceTextField;
+    private java.awt.Label secondSequenceTextLabel;
     // End of variables declaration//GEN-END:variables
 }
