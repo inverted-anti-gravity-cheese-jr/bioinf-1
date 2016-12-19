@@ -188,10 +188,13 @@ public class BioFrame extends javax.swing.JFrame {
 	    AlignmentPair globalAlignment;
 	    if (rnaCheckbox.isSelected()) {
 		globalAlignment = BioAlgorithms.getGlobalAlignmentForRNA(sequence1, sequence2, similarityMatrixFile);
+		resultTextArea.setText("Wynik:\n" + 
+			BioAlgorithms.untranslateProtein(globalAlignment.getQuery()).seqString() + "\n" + 
+			BioAlgorithms.untranslateProtein(globalAlignment.getSubject()).seqString());
 	    } else {
 		globalAlignment = BioAlgorithms.getGlobalAlignment(sequence1, sequence2, similarityMatrixFile);
+		resultTextArea.setText("Wynik:\n" + globalAlignment.getQuery().seqString() + "\n" + globalAlignment.getSubject().seqString());
 	    }
-	    resultTextArea.setText("Wynik:\n" + globalAlignment.getQuery().seqString() + "\n" + globalAlignment.getSubject().seqString());
 	} catch (Exception e) {
 	}
     }//GEN-LAST:event_globalAlignmentButtonActionPerformed
@@ -204,11 +207,15 @@ public class BioFrame extends javax.swing.JFrame {
 	    AlignmentPair localAlignment;
 	    if (rnaCheckbox.isSelected()) {
 		localAlignment = BioAlgorithms.getLocalAlignmentForRNA(sequence1, sequence2, similarityMatrixFile);
+		resultTextArea.setText("Wynik:\n" + 
+			BioAlgorithms.untranslateProtein(localAlignment.getQuery()).seqString() + "\n" + 
+			BioAlgorithms.untranslateProtein(localAlignment.getSubject()).seqString());
 	    }
 	    else {
 		localAlignment = BioAlgorithms.getLocalAlignment(sequence1, sequence2, similarityMatrixFile);
+		resultTextArea.setText("Wynik:\n" + localAlignment.getQuery().seqString() + "\n" + localAlignment.getSubject().seqString());
 	    }
-	    resultTextArea.setText("Wynik:\n" + localAlignment.getQuery().seqString() + "\n" + localAlignment.getSubject().seqString());
+	    
 	} catch (Exception e) {
 	}
     }//GEN-LAST:event_localAlignmentButtonActionPerformed

@@ -6,6 +6,9 @@
 package pl.pg.gda.eti.bioinfa;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import org.biojava.bio.BioException;
 import org.biojava.bio.alignment.AlignmentAlgorithm;
 import org.biojava.bio.alignment.AlignmentPair;
@@ -16,10 +19,16 @@ import org.biojava.bio.seq.DNATools;
 import org.biojava.bio.seq.ProteinTools;
 import org.biojava.bio.seq.RNATools;
 import org.biojava.bio.seq.Sequence;
+import org.biojava.bio.symbol.Alphabet;
 import org.biojava.bio.symbol.AlphabetManager;
+import org.biojava.bio.symbol.Edit;
 import org.biojava.bio.symbol.FiniteAlphabet;
 import org.biojava.bio.symbol.IllegalSymbolException;
+import org.biojava.bio.symbol.ManyToOneTranslationTable;
+import org.biojava.bio.symbol.ReversibleTranslationTable;
+import org.biojava.bio.symbol.SimpleAtomicSymbol;
 import org.biojava.bio.symbol.SimpleReversibleTranslationTable;
+import org.biojava.bio.symbol.Symbol;
 import org.biojava.bio.symbol.SymbolList;
 import org.biojava.bio.symbol.SymbolListViews;
 
@@ -109,9 +118,35 @@ public class BioAlgorithms {
 	// Perform an alignment and save the results.
 	AlignmentPair needleAlignmentPair = aligner.pairwiseAlignment(queryProtein, targetProtein);
 	
-	System.out.println(needleAlignmentPair.formatOutput());
-	
 	return needleAlignmentPair;
+    }
+    
+    public static SymbolList untranslateProtein(SymbolList protein) throws IllegalSymbolException {
+	
+	ManyToOneTranslationTable transcriptionTable = RNATools.getGeneticCode("UNIVERSAL");
+	String rnaHelper = "";
+	
+	try {
+	    for(int i = 1; i <= protein.length(); i++) {
+		Set symbolSet = transcriptionTable.untranslate(protein.symbolAt(i));
+		if(symbolSet.isEmpty()) {
+		    rnaHelper += "-";
+		}
+		else {
+		    SimpleAtomicSymbol any = (SimpleAtomicSymbol) symbolSet.iterator().next();
+		    for(Object symbolObj: any.getSymbols()) {
+			Symbol symbol = (Symbol) symbolObj;
+			rnaHelper += symbol.getName().toUpperCase().charAt(0);
+		    }
+		}
+	    }
+	    SymbolList newList = RNATools.createRNA(rnaHelper);
+	    return newList;
+	}
+	catch (Exception e) {
+	    e.printStackTrace();
+	}
+	return null;
     }
 
 }
