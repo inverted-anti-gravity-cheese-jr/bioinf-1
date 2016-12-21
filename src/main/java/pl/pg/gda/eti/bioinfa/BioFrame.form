@@ -112,7 +112,7 @@
     </Component>
     <Component class="javax.swing.JTextField" name="secondSequenceTextField">
       <Properties>
-        <Property name="text" type="java.lang.String" value="AAAAACG"/>
+        <Property name="text" type="java.lang.String" value="AAAAGC"/>
       </Properties>
     </Component>
     <Component class="java.awt.Label" name="matrixTextLabel">

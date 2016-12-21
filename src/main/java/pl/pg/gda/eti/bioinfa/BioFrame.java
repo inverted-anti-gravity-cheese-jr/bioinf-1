@@ -5,21 +5,8 @@
  */
 package pl.pg.gda.eti.bioinfa;
 
-import java.io.File;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFileChooser;
-import org.biojava.bio.alignment.AlignmentAlgorithm;
-import org.biojava.bio.alignment.AlignmentPair;
-import org.biojava.bio.alignment.NeedlemanWunsch;
-import org.biojava.bio.alignment.SmithWaterman;
-import org.biojava.bio.alignment.SubstitutionMatrix;
 import org.biojava.bio.seq.DNATools;
-import org.biojava.bio.seq.RNATools;
-import org.biojava.bio.seq.Sequence;
-import org.biojava.bio.symbol.AlphabetManager;
-import org.biojava.bio.symbol.FiniteAlphabet;
-import org.biojava.bio.symbol.IllegalSymbolException;
 import org.biojava.bio.symbol.SymbolList;
 
 /**
@@ -73,7 +60,7 @@ public class BioFrame extends javax.swing.JFrame {
 
         secondSequenceTextLabel.setText("Sekwencja druga");
 
-        secondSequenceTextField.setText("AAAAACG");
+        secondSequenceTextField.setText("AAAAGC");
 
         matrixTextLabel.setText("Macierz podobieństwa");
 
@@ -186,42 +173,44 @@ public class BioFrame extends javax.swing.JFrame {
     private void globalAlignmentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_globalAlignmentButtonActionPerformed
 
 	try {
-
+	    String result = "";
 	    String sequence1 = firstSequenceTextField.getText();
 	    String sequence2 = secondSequenceTextField.getText();
 	    String similarityMatrixFile = matrixTextField.getText();
-	    AlignmentPair globalAlignment;
+	    Pair<SymbolList> globalAlignment;
 	    if (rnaCheckbox.isSelected()) {
-		globalAlignment = BioAlgorithms.getGlobalAlignmentForRNA(sequence1, sequence2, similarityMatrixFile);
-		resultTextArea.setText("Wynik:\n" + 
-			BioAlgorithms.untranslateProtein(globalAlignment.getQuery()).seqString() + "\n" + 
-			BioAlgorithms.untranslateProtein(globalAlignment.getSubject()).seqString());
+		Pair<Pair<SymbolList>> alignmentWithProtein = BioAlgorithms.getGlobalAlignmentForRNA(sequence1, sequence2, similarityMatrixFile);
+		result += "Aminokwasy:\n" + alignmentWithProtein.get2().get1().seqString() + "\n" + alignmentWithProtein.get2().get2().seqString() + "\n\n";
+		globalAlignment = alignmentWithProtein.get1();
 	    } else {
 		globalAlignment = BioAlgorithms.getGlobalAlignment(sequence1, sequence2, similarityMatrixFile);
-		resultTextArea.setText("Wynik:\n" + globalAlignment.getQuery().seqString() + "\n" + globalAlignment.getSubject().seqString());
 	    }
+	    result += "Wynik:\n" + globalAlignment.get1().seqString() + "\n" + globalAlignment.get2().seqString();
+	    resultTextArea.setText(result);
 	} catch (Exception e) {
+	    e.printStackTrace();
 	}
     }//GEN-LAST:event_globalAlignmentButtonActionPerformed
 
     private void localAlignmentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_localAlignmentButtonActionPerformed
 	try {
+	    String result = "";
 	    String sequence1 = firstSequenceTextField.getText();
 	    String sequence2 = secondSequenceTextField.getText();
 	    String similarityMatrixFile = matrixTextField.getText();
-	    AlignmentPair localAlignment;
+	    Pair<SymbolList> localAlignment;
 	    if (rnaCheckbox.isSelected()) {
-		localAlignment = BioAlgorithms.getLocalAlignmentForRNA(sequence1, sequence2, similarityMatrixFile);
-		resultTextArea.setText("Wynik:\n" + 
-			BioAlgorithms.untranslateProtein(localAlignment.getQuery()).seqString() + "\n" + 
-			BioAlgorithms.untranslateProtein(localAlignment.getSubject()).seqString());
+		Pair<Pair<SymbolList>> alignmentWithProtein = BioAlgorithms.getLocalAlignmentForRNA(sequence1, sequence2, similarityMatrixFile);
+		result += "Aminokwasy:\n" + alignmentWithProtein.get2().get1().seqString() + "\n" + alignmentWithProtein.get2().get2().seqString() + "\n\n";
+		localAlignment = alignmentWithProtein.get1();
 	    }
 	    else {
 		localAlignment = BioAlgorithms.getLocalAlignment(sequence1, sequence2, similarityMatrixFile);
-		resultTextArea.setText("Wynik:\n" + localAlignment.getQuery().seqString() + "\n" + localAlignment.getSubject().seqString());
 	    }
-	    
+	    result += "Wynik:\n" + localAlignment.get1().seqString() + "\n" + localAlignment.get2().seqString();
+	    resultTextArea.setText(result);
 	} catch (Exception e) {
+	    e.printStackTrace();
 	}
     }//GEN-LAST:event_localAlignmentButtonActionPerformed
 
@@ -231,7 +220,8 @@ public class BioFrame extends javax.swing.JFrame {
 	    chooser.showOpenDialog(this);
 	    matrixTextField.setText(chooser.getSelectedFile().getAbsolutePath());
 	}
-	catch (Exception e) {}
+	catch (Exception e) {
+	}
     }//GEN-LAST:event_matrixFileChooserActionPerformed
 
     private void firstSequenceTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_firstSequenceTextFieldActionPerformed
@@ -264,9 +254,14 @@ public class BioFrame extends javax.swing.JFrame {
 	    String sequence1 = firstSequenceTextField.getText();
 	    String sequence2 = secondSequenceTextField.getText();
 	    String similarityMatrixFile = matrixTextField.getText();
-	    int editDistance = BioAlgorithms.getEditDistance(sequence1, sequence2, similarityMatrixFile);
-		resultTextArea.setText("Odległość edycyjna:\n" + 
-			editDistance);
+	    if(rnaCheckbox.isSelected()) {
+		int editDistance = BioAlgorithms.getEditDistanceForRNA(sequence1, sequence2, similarityMatrixFile);
+		resultTextArea.setText("Odległość edycyjna:\n" + editDistance);
+	    }
+	    else {
+		int editDistance = BioAlgorithms.getEditDistance(sequence1, sequence2, similarityMatrixFile);
+		resultTextArea.setText("Odległość edycyjna:\n" + editDistance);
+	    }
 	} catch (Exception e) {
 	}
     }//GEN-LAST:event_editDistanceButtonActionPerformed
