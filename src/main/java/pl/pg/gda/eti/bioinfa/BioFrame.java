@@ -102,6 +102,11 @@ public class BioFrame extends javax.swing.JFrame {
         });
 
         editDistanceButton.setText("Pokaż odległość edycyjną");
+        editDistanceButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editDistanceButtonActionPerformed(evt);
+            }
+        });
 
         resultTextLabel.setText("Wynik");
 
@@ -253,6 +258,18 @@ public class BioFrame extends javax.swing.JFrame {
 	    secondSequenceTextField.setText(lastDnaSeq2);
 	}
     }//GEN-LAST:event_rnaCheckboxActionPerformed
+
+    private void editDistanceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editDistanceButtonActionPerformed
+        try {
+	    String sequence1 = firstSequenceTextField.getText();
+	    String sequence2 = secondSequenceTextField.getText();
+	    String similarityMatrixFile = matrixTextField.getText();
+	    int editDistance = BioAlgorithms.getEditDistance(sequence1, sequence2, similarityMatrixFile);
+		resultTextArea.setText("Odległość edycyjna:\n" + 
+			editDistance);
+	} catch (Exception e) {
+	}
+    }//GEN-LAST:event_editDistanceButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

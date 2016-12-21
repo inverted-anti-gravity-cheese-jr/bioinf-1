@@ -148,5 +148,23 @@ public class BioAlgorithms {
 	}
 	return null;
     }
+       
+    public static int getEditDistance(String sequence1, String sequence2, String similarityMatrixFile) throws Exception {
+        // The alphabet of the sequences. For this example DNA is choosen.
+	FiniteAlphabet alphabet = (FiniteAlphabet) AlphabetManager.alphabetForName("DNA");
+	// Read the substitution matrix file. 
+	SubstitutionMatrix matrix = new SubstitutionMatrix(alphabet, new File(similarityMatrixFile));
+	// Define the default costs for sequence manipulation for the global alignment.
+	short noCost = 0;
+	NeedlemanWunsch aligner = new NeedlemanWunsch(noCost, noCost, noCost, noCost, noCost, matrix);
 
+	Sequence query = DNATools.createDNASequence(sequence1, "query");
+	Sequence target = DNATools.createDNASequence(sequence2, "target");
+	// Perform an alignment and save the results.
+	AlignmentPair needleAlignmentPair = aligner.pairwiseAlignment(query, target);
+        
+        System.out.println(needleAlignmentPair.formatOutput());
+        int editDistance = needleAlignmentPair.length() - needleAlignmentPair.getNumIdenticals();
+	return editDistance;
+    }
 }
