@@ -139,8 +139,8 @@ public class BioAlgorithms {
 	// Perform an alignment and save the results.
 	AlignmentPair needleAlignmentPair = aligner.pairwiseAlignment(query, target);
         
-        System.out.print(needleAlignmentPair.formatOutput());
-        int editDistance = needleAlignmentPair.length() + aligner.getEditDistance();
+        //System.out.print(needleAlignmentPair.formatOutput());
+        int editDistance = needleAlignmentPair.length() - needleAlignmentPair.getNumIdenticals();
 	return editDistance;
     }
     
@@ -151,12 +151,8 @@ public class BioAlgorithms {
 	SubstitutionMatrix matrix = new SubstitutionMatrix(alphabet, new File(similarityMatrixFile));
 	// Define the default costs for sequence manipulation for the global alignment.
 	short noCost = 0;
-<<<<<<< HEAD
-	NeedlemanWunsch aligner = new NeedlemanWunsch(noCost, noCost, noCost, noCost, noCost, matrix);
-=======
         short oneCost = 1;
 	NeedlemanWunsch aligner = new NeedlemanWunsch(noCost, oneCost, oneCost, oneCost, noCost, matrix);
->>>>>>> cf797248458c9ce9d7966363e8b9a74907972f3f
 
 	Sequence query = RNATools.createRNASequence(sequence1, "query");
 	Sequence target = RNATools.createRNASequence(sequence2, "target");
@@ -168,7 +164,7 @@ public class BioAlgorithms {
 	AlignmentPair needleAlignmentPair = aligner.pairwiseAlignment(queryProtein, targetProtein);
         
         System.out.print(needleAlignmentPair.formatOutput());
-        int editDistance = needleAlignmentPair.length() + aligner.getEditDistance();
+        int editDistance = needleAlignmentPair.length() - needleAlignmentPair.getNumIdenticals();
 	return editDistance;
     }
     
