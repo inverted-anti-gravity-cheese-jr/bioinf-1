@@ -36,8 +36,9 @@ public class BioAlgorithms {
 	SubstitutionMatrix matrix = new SubstitutionMatrix(alphabet, new File(similarityMatrixFile));
 	// Define the default costs for sequence manipulation for the global alignment.
 	short noCost = 0;
-	AlignmentAlgorithm aligner = new SmithWaterman(noCost, noCost, noCost, noCost, noCost, matrix);
-	
+        short oneCost = 1;
+	AlignmentAlgorithm aligner = new SmithWaterman(noCost, oneCost, oneCost, oneCost, noCost, matrix);
+        
 	Sequence query = DNATools.createDNASequence(sequence1, "query");
 	Sequence target = DNATools.createDNASequence(sequence2, "target");
 	
@@ -54,7 +55,8 @@ public class BioAlgorithms {
 	SubstitutionMatrix matrix = new SubstitutionMatrix(alphabet, new File(similarityMatrixFile));
 	// Define the default costs for sequence manipulation for the global alignment.
 	short noCost = 0;
-	AlignmentAlgorithm aligner = new NeedlemanWunsch(noCost, noCost, noCost, noCost, noCost, matrix);
+        short oneCost = 1;
+	AlignmentAlgorithm aligner = new NeedlemanWunsch(noCost, oneCost, oneCost, oneCost, noCost, matrix);
 
 	Sequence query = DNATools.createDNASequence(sequence1, "query");
 	Sequence target = DNATools.createDNASequence(sequence2, "target");
@@ -71,7 +73,8 @@ public class BioAlgorithms {
 	SubstitutionMatrix matrix = new SubstitutionMatrix(alphabet, new File(similarityMatrixFile));
 	// Define the default costs for sequence manipulation for the global alignment.
 	short noCost = 0;
-	AlignmentAlgorithm aligner = new NeedlemanWunsch(noCost, noCost, noCost, noCost, noCost, matrix);
+        short oneCost = 1;
+	AlignmentAlgorithm aligner = new NeedlemanWunsch(noCost, oneCost, oneCost, oneCost, noCost, matrix);
 
 	Sequence query = RNATools.createRNASequence(sequence1, "query");
 	Sequence target = RNATools.createRNASequence(sequence2, "target");
@@ -83,7 +86,9 @@ public class BioAlgorithms {
 	AlignmentPair needleAlignmentPair = aligner.pairwiseAlignment(queryProtein, targetProtein);
 	
 	SymbolList alignedQuery = untranslateProtein(query, needleAlignmentPair.getQuery());
-	SymbolList alignedSubject = untranslateProtein(query, needleAlignmentPair.getSubject());
+	SymbolList alignedSubject = untranslateProtein(target, needleAlignmentPair.getSubject());
+        
+        System.out.println(needleAlignmentPair.formatOutput());
 	
 	Pair<SymbolList> pairResult = new Pair<SymbolList>(alignedQuery, alignedSubject);
 	Pair<SymbolList> pairProtein = new Pair<SymbolList>(queryProtein, targetProtein);
@@ -98,7 +103,8 @@ public class BioAlgorithms {
 	SubstitutionMatrix matrix = new SubstitutionMatrix(alphabet, new File(similarityMatrixFile));
 	// Define the default costs for sequence manipulation for the global alignment.
 	short noCost = 0;
-	AlignmentAlgorithm aligner = new SmithWaterman(noCost, noCost, noCost, noCost, noCost, matrix);
+        short oneCost = 1;
+	AlignmentAlgorithm aligner = new SmithWaterman(noCost, oneCost, oneCost, oneCost, noCost, matrix);
 
 	Sequence query = RNATools.createRNASequence(sequence1, "query");
 	Sequence target = RNATools.createRNASequence(sequence2, "target");
@@ -110,7 +116,7 @@ public class BioAlgorithms {
 	AlignmentPair needleAlignmentPair = aligner.pairwiseAlignment(queryProtein, targetProtein);
 	
 	SymbolList alignedQuery = untranslateProtein(query, needleAlignmentPair.getQuery());
-	SymbolList alignedSubject = untranslateProtein(query, needleAlignmentPair.getSubject());
+	SymbolList alignedSubject = untranslateProtein(target, needleAlignmentPair.getSubject());
 	
 	Pair<SymbolList> pairResult = new Pair<SymbolList>(alignedQuery, alignedSubject);
 	Pair<SymbolList> pairProtein = new Pair<SymbolList>(queryProtein, targetProtein);
@@ -125,7 +131,8 @@ public class BioAlgorithms {
 	SubstitutionMatrix matrix = new SubstitutionMatrix(alphabet, new File(similarityMatrixFile));
 	// Define the default costs for sequence manipulation for the global alignment.
 	short noCost = 0;
-	NeedlemanWunsch aligner = new NeedlemanWunsch(noCost, noCost, noCost, noCost, noCost, matrix);
+        short oneCost = 1;
+	NeedlemanWunsch aligner = new NeedlemanWunsch(noCost, oneCost, oneCost, oneCost, noCost, matrix);
 
 	Sequence query = DNATools.createDNASequence(sequence1, "query");
 	Sequence target = DNATools.createDNASequence(sequence2, "target");
@@ -144,7 +151,12 @@ public class BioAlgorithms {
 	SubstitutionMatrix matrix = new SubstitutionMatrix(alphabet, new File(similarityMatrixFile));
 	// Define the default costs for sequence manipulation for the global alignment.
 	short noCost = 0;
+<<<<<<< HEAD
 	NeedlemanWunsch aligner = new NeedlemanWunsch(noCost, noCost, noCost, noCost, noCost, matrix);
+=======
+        short oneCost = 1;
+	NeedlemanWunsch aligner = new NeedlemanWunsch(noCost, oneCost, oneCost, oneCost, noCost, matrix);
+>>>>>>> cf797248458c9ce9d7966363e8b9a74907972f3f
 
 	Sequence query = RNATools.createRNASequence(sequence1, "query");
 	Sequence target = RNATools.createRNASequence(sequence2, "target");
@@ -195,6 +207,8 @@ public class BioAlgorithms {
 			
 			// przeszukaj fragment sekwencji RNA pod kątem występowania symbolu
 			int ind = searchInRnaSubstring(symbolStr, oldRna, searchFrom, searchTo);
+                        
+                        //System.out.println("[" + searchFrom + "]Szukam: " +symbolStr + " wewnątrz '" + oldRna.seqString().substring(searchFrom * 3, (searchTo + 1) * 3) + "'");
 			
 			// wybierz ten który był znaleziony "najwcześniej" w sekwencji
 			if (ind < minInd && ind >= 0) {
@@ -208,9 +222,12 @@ public class BioAlgorithms {
 		    // jeżeli znaleziono w sekwencji to przesuń wyszukiwanie dla następnych
 		    if(minInd < searchTo + 1) {
 			System.out.println("Znaleziono symbol '" + correctSymbol + "' na indeksie " + minInd);
-			searchFrom = minInd;
-			searchTo = Math.max(searchTo, minInd);
+			searchFrom = minInd + 1;
 		    }
+                    else {
+                        searchFrom ++;
+                    }
+                    searchTo = Math.max(searchTo, searchFrom);
 		}
 	    }
 	    SymbolList newList = RNATools.createRNA(rnaHelper);
